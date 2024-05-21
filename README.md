@@ -47,3 +47,14 @@ and add,delete and edit products.
 ![adminHomeScreen](https://user-images.githubusercontent.com/119648262/223627498-71d874e3-cc6b-44f6-8e3f-732eb5d06522.PNG)
 ![userOrder](https://user-images.githubusercontent.com/119648262/223627501-f48e8d33-773e-4bf1-bcc8-d38f7dbf1036.PNG)
 ![userProfile](https://user-images.githubusercontent.com/119648262/223627502-dff82483-762d-49d2-8e74-130aa7373da8.PNG)
+
+
+// To install and start project:
+1. open the project cakeshop in vscode.
+2. open two terminals and move to client in one terminal and move to server in another terminal. To move to the client run cd client and to move to the server, run cd server.
+3. on the client:
+  run the command=>  npm install to install dependencies and npm start to run the frontend code.(if error occur while installing dependencies, run the command  npm install <not found dependencies>)
+4. on the server:
+  run the command=>  npm install to install dependencies and nodeomon to run the backend code.
+  After following the above command, you can achieve the project run on the browser.
+  
