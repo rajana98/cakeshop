@@ -1,0 +1,664 @@
+import React, { useEffect, useState } from "react";
+import { Modal, Form, Input, Button, message,Upload} from "antd";
+import axios from "axios";
+import MySidebar from "../../components/sidebar/sidebar";
+import { IoIosAddCircle } from 'react-icons/io';
+import { FiUpload } from 'react-icons/fi';
+const Products = () => {
+  const [visible, setVisible] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const triggerImgSave = async () => {
+    const formdata = new FormData();
+    formdata.append("file", selectedFile);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/products`, {
+      method: "POST",
+      body: formdata,
+    });
+    const data = await res.json();
+    if (data) {
+      console.log(data)
+    }
+  };
+
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = () => {
+    axios.post(`${process.env.REACT_APP_API_URL}/products`, formData).then(response => {
+      console.log(response.data);
+      message.success("Product added successfully",[2])
+    })
+    .catch(error => {
+      console.error(error);
+    });
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const onFinish = values => {
+    setFormData(values);
+  };
+
+
+  return (
+    <>
+    <div className='home' style={{ display: "flex" }}>
+    <div style={{ width: "25%" }}>
+      <MySidebar />
+    </div>
+    <div style={{ width: "75%", marginTop: "30px",display:"flex", justifyContent:"center"}}>
+    <Button type="primary" onClick={showModal}
+            style={{ height: '300px', width: '500px', backgroundColor: '#25a5be', fontSize:"40px"}}>
+            Add Product <IoIosAddCircle />
+          </Button>
+      <Modal
+        title="Add Product"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        onClick={() => triggerImgSave()}
+      >
+        <Form onFinish={onFinish}>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Price"
+            name="price"
+            rules={[{ required: true}]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item 
+          rules={[{required:true}]}
+          label="Product Image">
+        <Upload
+          name="file"
+          beforeUpload={() => false}
+          onChange={(e) => {
+            setSelectedFile(e.target.files[0])
+          }}
+        >
+          <Button>
+            <FiUpload />Upload
+          </Button>
+        </Upload>
+      </Form.Item>
+          <div style={{ textAlign: "center" }}>
+          <Form.Item>
+              <Button
+                key="link"
+                href="https://google.com"
+                type="dashed"
+                onClick={handleOk}
+              >
+                Search on Google
+              </Button>
+              </Form.Item>
+              </div>
+        </Form>
+      </Modal>
+      </div>
+      </div>
+    </>
+  );
+};
+
+export default Products;
+
+
+<div className="card">
+        <div className='file'>
+          <input type="file" onChange={(e) => {
+            setFile(e.target.files[0])
+          }} className='setFile'/>
+          <button onClick={() => triggerImgSave()}>Save</button>
+          </div>
+       
+        <div class="imgbx">
+          {userDetails.avatarName && <img src={require(`../../uploads/${userDetails.avatarName}`)} alt="Loading.." />}
+        </div>
+          <div className="usertdetails">
+              {/* <h3><span>{userDetails._id}</span></h3> */}
+              <h3>Email:<div></div><span>{userDetails.email}</span></h3>
+              <h3>Phone Number:<div></div><span>{userDetails.phoneNumber}</span></h3>
+            <div className="actionBtn">
+              
+              <button><Link to='/changePassword'><ChangePassword /></Link></button>
+              {/* <ProfileSettings /> */}
+            </div>
+          </div>
+      </div>
+
+
+
+import React from 'react'
+import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { Dropdown, Space } from 'antd';
+import { Link } from 'react-router-dom';
+import ChangePassword from './changePassword';
+
+const ProfileSettings = () => {
+
+  const elements = [
+    {
+      key: '1',
+      label: (
+        <Link target="_blank" rel="noopener noreferrer" to='/changePassword' >
+          <ChangePassword />
+       </Link>
+      ),
+    },
+    {
+      key: '2',
+      label:"Forgot Password",
+      icon: <SmileOutlined />,
+      disabled: true,
+    },
+    {
+      key: '3',
+      danger: true,
+      label: 'Deactivate Account',
+    },
+  ];
+
+  return (
+    <> 
+    <Dropdown
+    menu={{
+      elements,
+    }}
+  >
+    <Space>
+      Profile Settings
+      <DownOutlined />
+    </Space>
+</Dropdown>
+  </>
+  )
+}
+
+export default ProfileSettings
+
+
+import { useMemo, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
+import { useDispatch, useSelector } from "react-redux"
+import { setSenderLocationLatLng, setReceiverLocationLatLng, setDistance } from "../../redux/reducers/loactionSlice"
+import L from 'leaflet';
+import '../../App.css'
+import { notification } from 'antd';
+
+const dragSenderMarker = L.icon({
+  iconSize: [25, 41],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  iconUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-shadow.png"
+});
+
+const dragReceiverMarker = L.icon({
+  iconSize: [30, 45],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/1180/1180058.png?w=740&t=st=1675612962~exp=1675613562~hmac=72aeaef81f5c310472a9da30bdcdfee7807d60f8593016c05f9460f1037eae64",
+
+});
+
+
+const MyMap = () => {
+  const { senderLocationLatLng, receiverLocationLatLng } = useSelector(state => state.location)
+  const dispatch = useDispatch()
+  const toRadian = angle => (angle * Math.PI) / 180;
+  const lat1 = toRadian(receiverLocationLatLng?.lat);
+  const lng1 = toRadian(receiverLocationLatLng?.lng);
+  const lat2 = toRadian(senderLocationLatLng?.lat);
+  const lng2 = toRadian(senderLocationLatLng?.lng);
+
+  const calculateDistance = () => {
+    const R = 6371
+    const a =
+      Math.sin((lat2 - lat1) / 2) * Math.sin((lat2 - lat1) / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin((lng2 - lng1) / 2) * Math.sin((lng2 - lng1) / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c;
+    notification.open({
+      message: `Distance between Sender and Receiver is: ${distance}`
+      
+    });
+    dispatch(setDistance(distance))
+  }
+debugger
+  const { lat, lng } = senderLocationLatLng
+
+  const center = {
+    lat: 27.68564550564005,
+    lng: 85.3445145828365,
+  }
+
+
+  const geoCodeLatLng = (lat, lng) => {
+    console.log("jgg", process.env.REACT_APP_MAP_API_KEY)
+    fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=${process.env.REACT_APP_MAP_API_KEY}`)
+      .then((res) => res.json())
+      .then((data) => notification.open({ message: `${data.features[0].properties.formatted}` }));
+  }
+
+  const SenderDraggableMarker=()=> {
+    const dispatch = useDispatch()
+    const markerRef = useRef(null)
+
+    const eventHandlers = useMemo(
+      (e) => ({
+        dragend() {
+          const marker = markerRef.current
+          if (marker != null) {
+            const latLngObj = {
+              lat: marker.getLatLng()?.lat,
+              lng: marker.getLatLng()?.lng
+            }
+            dispatch(setSenderLocationLatLng(latLngObj))
+            calculateDistance()
+            geoCodeLatLng(marker.getLatLng().lat, marker.getLatLng().lng)
+          }
+        },
+      }),
+      [],
+    )
+
+    return (
+      <Marker
+        draggable={true}
+        eventHandlers={eventHandlers}
+        position={senderLocationLatLng.lat ? senderLocationLatLng : center}
+        icon={dragSenderMarker}
+        ref={markerRef}>
+        <Popup minWidth={90}>
+          <span >
+            This marker is draggable
+          </span>
+        </Popup>
+      </Marker>
+    )
+  }
+
+  const ReceiverDraggableMarker=()=> {
+    const dispatch = useDispatch()
+    const markerRef = useRef(null)
+
+    const eventHandlers = useMemo(
+      (e) => ({
+        dragend() {
+          const marker = markerRef.current
+          if (marker != null) {
+            const latLngObj = {
+              lat: marker.getLatLng()?.lat,
+              lng: marker.getLatLng()?.lng
+            }
+            dispatch(setReceiverLocationLatLng(latLngObj))
+            calculateDistance()
+            geoCodeLatLng(marker.getLatLng().lat, marker.getLatLng().lng)
+          }
+        },
+      }),
+      [],
+    )
+
+
+    return (
+      <Marker
+        draggable={true}
+        eventHandlers={eventHandlers}
+        position={receiverLocationLatLng.lat ? receiverLocationLatLng : center}
+        icon={dragReceiverMarker}
+        ref={markerRef}>
+        <Popup minWidth={90}>
+          <span >
+            <input placeholder="enter sender name" />
+          </span>
+        </Popup>
+      </Marker>
+    )
+  }
+  return (
+    <>
+      <MapContainer center={lat ? [lat, lng] : [27.68564550564005, 85.3445145828365]} zoom={10} scrollWheelZoom={false}
+        style={{ height: "100vh", width: "100vw" }}>
+        <TileLayer
+          attribution='&copy; <Link to="https://www.openstreetmap.org/copyright">OpenStreetMap</Link> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <SenderDraggableMarker />
+        <ReceiverDraggableMarker />
+        <Polyline color="#003312" positions={[senderLocationLatLng, receiverLocationLatLng]} />
+      </MapContainer>
+    </>
+  )
+}
+export default MyMap
+
+router.put("/products", async (req, res) => {
+  try {
+    const { name, price } = req.body;
+    console.log(req.body,req.query,"++")
+    const updatedProduct = await Products.findByIdAndUpdate(req.query.id,
+      {name,price},{new:true} );
+    if (updatedProduct) {
+      console.log(updatedProduct,"hi")
+      res.status(200).json({
+        editProduct: updatedProduct,
+        msg: "Product updated successfully"
+      });
+    } else {
+      res.status(500).json({ msg: "Something went wrong" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  });
+
+  import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+
+const SearchBar = ({productList}) => {
+  const [searchData,setSearchData]=useState([productList])
+ 
+
+  
+
+ 
+
+  return (
+    <div>
+      
+    </div>
+  );
+};
+
+export default SearchBar
+
+
+import { useState } from "react";
+
+const SearchBar=({productList})=> {
+  // console.log("@", productList)
+  const [key, setKey] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/search/${key}`);
+      const data = await response.json();
+      console.log(data,"@@")
+      // setSearchResult(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div>
+      <form onSubmit={()=>handleSearch()}>
+        <input
+          type="text"
+          onChange={(event) => setKey(event.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+      {/* {productList.map((item,id)=>{
+        if (item[id].name===searchResult)
+      })} */}
+      {/* <h1>{searchResult}</h1> */}
+    </div>
+  );
+}
+
+export default SearchBar
+
+
+import React, { useState, useEffect } from "react";
+
+const SearchBar=({productList})=> {
+  const [searchText, setSearchText] = useState("");
+
+  return (
+    <>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchText}
+        onChange={(event) => {
+          setSearchText(event.target.value);
+        }}
+      />
+      <div>
+        <ul>
+          {productList.filter((val) => {
+            if (searchText === "") {
+              return val;
+            } else if (
+              val.first_name.toLowerCase().includes(searchText.toLowerCase())
+            ) {
+              return val;
+            } else {
+              return "";
+            }
+          }).map((data, index) => (
+            <li key={index}>{data.first_name}</li>
+          ))}
+        </ul>
+      </div>
+      </>
+  );
+  }
+
+export default SearchBar
+
+
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./cart.css";
+export const Cart = (props) => {
+  const [carts, setCarts] = useState([]);
+  const [payload, setPayloader] = useState({});
+  const [hasError, setError] = useState(false);
+  async function fetchCart() {
+    const res = await fetch("http://localhost:4000/cart");
+    res
+      .json()
+      .then((res) => {
+        console.log(res.data.items);
+        setCarts(res.data.items);
+        setPayloader(res.data);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  }
+  async function increaseQty(id) {
+    try {
+      const res = await fetch("http://localhost:4000/cart", {
+        method: "POST",
+        body: JSON.stringify({
+          productId: id,
+          quantity: 1,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      console.log(res);
+      fetchCart();
+      alert("Item Increamented");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function emptyCart() {
+    try {
+      const res = await fetch("http://localhost:4000/cart/empty-cart", {
+        method: "DELETE",
+      });
+      await res.json();
+      fetchCart();
+      props.history.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    fetchCart();
+  }, []);
+  return (
+    <main>
+      <section>
+        <div className="banner-innerpage">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6 align-self-center text-center">
+                <h1 className="title">Cart Listing</h1>
+                <h6 className="subtitle op-8">
+                  We are small team of creative people working together
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="spacer">
+          <div className="container">
+            <div className="row mt-5">
+              <div className="col-lg-9">
+                <div className="row shop-listing">
+                  <table className="table shop-table">
+                    <tr>
+                      <th className="b-0">Name</th>
+                      <th className="b-0">Price</th>
+                      <th className="b-0">Quantity</th>
+                      <th className="b-0 text-right">Total Price</th>
+                    </tr>
+                    {carts.map((item, i) => (
+                      <tr>
+                        <td>{item.productId.name}</td>
+                        <td>{item.productId.price}</td>
+                        <td>
+                          <button
+                            onClick={(e) => increaseQty(item.productId._id)}
+                            className="btn btn-primary btn-sm"
+                          >
+                            +
+                          </button>
+                          {item.quantity}
+                          <button className="btn btn-primary btn-sm">-</button>
+                        </td>
+                        <td className="text-right">
+                          <h5 className="font-medium m-b-30">{item.total}</h5>
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td colspan="3" align="right">
+                        Subtotal :{payload.subTotal}
+                      </td>
+                      <td colspan="4" align="right">
+                        <button
+                          className="btn btn-danger"
+                          onClick={(e) => emptyCart()}
+                        >
+                          Empty cart
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+
+
+// const { Router } = require('express');
+// const app = Router();
+
+// const emailController=require("../controllers/emailController")
+
+// app.post('/mail', async(req,res)=>{
+//     const {email}=req.body
+//     console.log(email)
+//     try {
+//         // Call the email sending function
+//         await emailController.sendEmail(
+//           "Hello from your Node.js app!",
+//           "This is a test email from your Node.js app. Enjoy!",
+//           email,
+//           "you@example.com",
+//           "you@example.com"
+//         );
+    
+//         res.status(200).json({ success: true, message: "Email sent" });
+//       } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "Error sending email" });
+//       }
+//     });
+
+// module.exports = app;
+
+const nodemailer = require('nodemailer');
+const { Router } = require('express');
+const app = Router();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'abc@gmail.com',
+        // the sender name is written
+    pass: 'semmsefnvfjzlvbc'
+    // this pass is generated from the senders google acccount in the google/security website
+  }
+});
+
+app.post('/mail', (req, res) => {
+  console.log(req.body)
+  const { to, subject, text } = req.body; 
+  const mailOptions = {
+    from: 'abc@gmail.com',
+    // the sender name is written
+    to,
+    subject,
+    text
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error: Unable to send email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send('Email sent successfully');
+    }
+  });
+});
+
+
+
+module.exports = app;

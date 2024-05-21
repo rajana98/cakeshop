@@ -1,0 +1,19 @@
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-header span {
+  align-self: flex-start;
+  margin-left: 50px;
+}
+
+.order-header h3{
+    color: blueviolet;
+}
+
+.bold-text {
+    font-weight: bold;
+    margin-right: 100px;
+  }

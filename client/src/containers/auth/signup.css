@@ -1,0 +1,60 @@
+.signup-container{
+  background-image: url(https://media.istockphoto.com/id/1013435204/photo/businessman-filling-online-registration-form.jpg?b=1&s=170667a&w=0&k=20&c=3zXl5z4At09Hs_gx-rGfRjXhJ7SHJNZO2jW4DfFVDNI=);
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-up-form {
+    margin: auto;
+    width: 40%;
+    background-color: rgba(138, 212, 148, 0.63);
+    border-radius: 50px;
+    padding: 25spx;
+    margin-top: 30px;
+  }
+  
+  .sign-up-form Form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .sign-up-form Form label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: right;
+    display: block;
+    margin: auto;
+  }
+  
+  .sign-up-form Form button {
+    width: 30%;
+    margin-top: 20px;
+    color:  rgb(0, 0, 0);
+    font-weight: bold;
+    font-style: italic;
+    font-size: 24px;
+    padding: 10px;
+    border:2px solid rgba(rgb(61, 48, 48), rgb(48, 124, 48), rgb(0, 255, 55), alpha) ;
+    background-color: green;
+    border-radius: 7px;
+  }
+  
+  .sign-up-form Form button:hover{
+    background-color:#002ead;
+        transition: 0.7s;
+  }
+  
+  .nav-to-login{
+    display: flex;
+justify-content: center;
+align-items: center;
+  }
+
+  .nav-to-login span {
+    text-align: center;
+    }

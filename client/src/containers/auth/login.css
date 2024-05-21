@@ -1,0 +1,115 @@
+.login-container {
+  background-image: url(https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bG9naW58ZW58MHx8MHx8&w=1000&q=80);
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  }
+  
+  .login-box {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: rgb(40, 209, 91);
+  box-shadow: 0px 0px 10px 0px #ccc; 
+  width: 30%;
+  height: 60%;
+  border: #fff;
+  border-radius: 20px;
+  }
+  
+  .left-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+  
+  .left-side h5 {
+  margin-bottom: 20px;
+  }
+  
+  .left-side Form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  padding: 10px; 
+  }
+  
+  .left-side Form Field{
+  margin-bottom: 20px;
+width: 100%;
+padding: 20px;
+border-radius: 5px;
+border: none;
+margin-bottom: 30px; 
+  }
+  
+  .left-side Form HandlePassword {
+    margin: 10px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 30px; 
+  }
+
+  .left-side Form .login-btn {
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none; 
+  cursor: pointer;
+  margin-top: 10px;
+  }
+  
+  
+  .login-box div span a {
+  color: #007bff; 
+  text-decoration: none;
+  }
+  
+ 
+  .left-side Form ErrorMessage {
+  color: red;
+  }
+  
+  
+  .right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+  
+  .right-side span {
+  margin-top: 20px;
+  }
+  
+  .right-side span a {
+  color: #007bff;
+  text-decoration: none;
+  }
+  
+  
+  .right-side span a {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #007bff;
+  color: #007bff; 
+  }
+  
+  
+  .right-side span a:hover {
+  background-color: #007bff; 
+  color: #fff; 
+  }
+ 
+  .right-side span a {
+  color: #007bff; 
+  text-decoration: none;
+  }

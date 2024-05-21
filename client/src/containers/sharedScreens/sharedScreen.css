@@ -1,0 +1,75 @@
+.card {
+    display: flex;
+    width: 35%;
+    margin: 40px auto;
+    padding: 40px;
+    align-items: center;
+    justify-content: center;
+   
+  }
+  
+  /* .file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+  }
+  
+  .setFile {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    border: 1px solid gray;
+    cursor: pointer;
+  } */
+  
+  .imgbx {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    margin-right: 20px;
+  }
+  
+  .imgbx img {
+    height: 150px;
+    width: 150px;
+    border-radius: 75px;
+  }
+  
+  .usertdetails {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-left: 20px;
+    align-items: center;
+  }
+  
+  .usertdetails h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: rgb(22, 211, 236);
+  }
+  
+  .usertdetails span {
+    font-weight: bold;
+    color: chartreuse;
+  }
+  
+  .actionBtn {
+    justify-content:center ;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+
+  .changePassword{
+    width: fit-content;
+    height: max-content;
+    margin: 40px auto;
+    padding: 10px;
+    background-color: blanchedalmond;
+    border: 5px solid rosybrown;
+   border-radius: 15px;
+  }
